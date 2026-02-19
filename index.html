@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Alfamaster">
+<meta name="theme-color" content="#0c1a0e">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Alfamaster 2026 Interclubs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0c1a0e;--ink2:#162118;--ink3:#1e2e20;--moss:#2a4a2e;--fern:#3d6b42;--sage:#6a9b6e;--mist:#a8c9ab;--gold:#c9a84c;--goldlt:#e8c96a;--golddk:#9a7a2a;--ivory:#f5f0e8;--ivory2:#ede6d6;--ivory3:#d8cfbb;--tmist:#8aab8e;--tdim:#4a6050;--reds:#c0392b;--st:env(safe-area-inset-top,44px);--sb:env(safe-area-inset-bottom,34px)}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--ink);color:var(--ivory);min-height:100dvh;overflow:hidden;position:fixed;width:100%}
+*{scrollbar-width:none}*::-webkit-scrollbar{display:none}
+
+/* grain */
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");opacity:.5}
+
+.scroll-area{position:fixed;inset:0;top:calc(var(--st) + 72px);bottom:calc(var(--sb) + 68px);overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+
+/* HEADER */
+.hdr{position:fixed;top:0;left:0;right:0;z-index:200;height:calc(var(--st) + 72px);background:var(--ink);border-bottom:1px solid rgba(201,168,76,.15);display:flex;align-items:flex-end;justify-content:space-between;padding:0 20px 14px}
+.hdr-brand{display:flex;flex-direction:column}
+.hdr-name{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;letter-spacing:.04em;color:var(--ivory);line-height:1}
+.hdr-name span{color:var(--gold)}
+.hdr-sub{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--tmist);margin-top:2px}
+.hdr-pill{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--goldlt);font-size:11px;font-weight:500;letter-spacing:.06em;padding:5px 12px;border-radius:20px}
+
+/* TAB BAR */
+.tbar{position:fixed;bottom:0;left:0;right:0;z-index:200;height:calc(var(--sb) + 68px);background:var(--ink2);border-top:1px solid rgba(201,168,76,.1);display:flex;align-items:flex-start;justify-content:space-around;padding-top:10px}
+.tb{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;cursor:pointer;padding:4px 6px;border-radius:10px;transition:all .2s;flex:1;max-width:70px;position:relative}
+.tb .ti{font-size:19px;transition:transform .2s;filter:grayscale(1)brightness(0.4)}
+.tb .tl{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--tdim);transition:color .2s}
+.tb.active .ti{filter:none;transform:scale(1.1)}
+.tb.active .tl{color:var(--gold)}
+.tb.active::after{content:'';position:absolute;top:-10px;left:50%;transform:translateX(-50%);width:24px;height:2px;background:var(--gold);border-radius:1px}
+.tb:active{opacity:.7;transform:scale(.93)}
+
+/* PAGES */
+.page{display:none;padding:20px 16px 16px}
+.page.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.page.active>*{animation:fadeUp .3s ease both}
+.page.active>*:nth-child(2){animation-delay:.05s}
+.page.active>*:nth-child(3){animation-delay:.1s}
+.page.active>*:nth-child(4){animation-delay:.15s}
+.page.active>*:nth-child(5){animation-delay:.2s}
+
+/* TYPOGRAPHY */
+.ptitle{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--ivory);letter-spacing:.02em;line-height:1;margin-bottom:4px}
+.ptitle em{font-style:italic;color:var(--gold)}
+.psub{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--tmist);margin-bottom:20px}
+.slabel{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--tdim);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.slabel::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.06)}
+
+/* CARDS */
+.card{background:var(--ink2);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:16px;margin-bottom:10px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;inset:0;border-radius:16px;background:linear-gradient(135deg,rgba(201,168,76,.04) 0%,transparent 60%);pointer-events:none}
+
+/* HERO */
+.hero{border-radius:20px;padding:22px 20px;margin-bottom:12px;background:var(--ink3);border:1px solid rgba(201,168,76,.15);position:relative;overflow:hidden}
+.hero-bg{position:absolute;right:-20px;bottom:-30px;font-size:120px;opacity:.04;line-height:1;pointer-events:none;user-select:none}
+.hero-ey{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.hero-t{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--ivory);line-height:1.1}
+.hero-t strong{font-weight:600;color:var(--goldlt)}
+.hdiv{height:1px;background:rgba(201,168,76,.15);margin:14px 0}
+.hero-stats{display:flex;gap:0}
+.hstat{flex:1;text-align:center}
+.hstat+.hstat{border-left:1px solid rgba(255,255,255,.08)}
+.hstat-val{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;color:var(--ivory);line-height:1}
+.hstat-val.gld{color:var(--goldlt)}
+.hstat-lab{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--tmist);margin-top:3px}
+
+/* KPIs */
+.kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.kpi{background:var(--ink2);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:14px 12px;text-align:center}
+.kpi-val{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:600;color:var(--ivory);line-height:1}
+.kpi-lbl{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--tdim);margin-top:3px}
+.kpi-sub{font-size:11px;color:var(--tmist);margin-top:4px;font-weight:500}
+
+/* RANK ROW */
+.rrow{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--ink2);border:1px solid rgba(255,255,255,.05);border-radius:13px;margin-bottom:7px;transition:border-color .2s,transform .15s;position:relative;overflow:hidden}
+.rrow:active{transform:scale(.98);opacity:.8}
+.rrow.r1{border-color:rgba(201,168,76,.35)}
+.rrow.r2{border-color:rgba(180,180,180,.25)}
+.rrow.r3{border-color:rgba(180,110,50,.25)}
+.rpos{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;width:26px;text-align:center;color:var(--tdim);flex-shrink:0}
+.rpos.g{color:var(--gold)}.rpos.s{color:#b0b0b0}.rpos.b{color:#b06830}
+.ravatar{width:38px;height:38px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--ink)}
+.rinfo{flex:1;min-width:0}
+.rname{font-size:14px;font-weight:500;color:var(--ivory);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rdetail{font-size:11px;color:var(--tdim);margin-top:1px}
+.rscore{text-align:right;flex-shrink:0}
+.ravg{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--ivory);line-height:1}
+.rpar{font-size:10px;color:var(--tdim)}
+
+/* BADGE */
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.bg{background:rgba(106,155,110,.2);color:var(--mist);border:1px solid rgba(106,155,110,.3)}
+.bgo{background:rgba(201,168,76,.15);color:var(--goldlt);border:1px solid rgba(201,168,76,.25)}
+.bgr{background:rgba(255,255,255,.07);color:var(--tdim);border:1px solid rgba(255,255,255,.1)}
+.br{background:rgba(192,57,43,.15);color:#e07060;border:1px solid rgba(192,57,43,.3)}
+
+/* INNER TABS */
+.itabs{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px}
+.itab{padding:7px 16px;border-radius:20px;border:1px solid rgba(255,255,255,.1);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;background:transparent;color:var(--tdim);transition:all .2s;letter-spacing:.04em}
+.itab.active{background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:600}
+
+/* FORMS */
+.fl{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--tmist);margin-bottom:6px;display:block}
+.fi,.fsel{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.1);font-size:15px;font-family:'Outfit',sans-serif;background:var(--ink3);color:var(--ivory);outline:none;transition:border-color .2s;appearance:none;-webkit-appearance:none}
+.fi:focus,.fsel:focus{border-color:rgba(201,168,76,.5)}
+.fsel option{background:var(--ink)}
+.fg{margin-bottom:12px}
+.frow{display:flex;gap:10px}
+.frow .fg{flex:1}
+.psrow{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:var(--ink3);border:1.5px solid rgba(255,255,255,.06);margin-bottom:6px;transition:border-color .2s}
+.psrow.hv{border-color:rgba(201,168,76,.3)}
+.psname{flex:1;font-size:13px;font-weight:500;color:var(--ivory);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pswrap{display:flex;flex-direction:column;align-items:center;gap:1px}
+.psinp{width:68px;padding:8px 6px;text-align:center;border-radius:10px;border:1px solid rgba(255,255,255,.1);font-size:17px;font-weight:600;font-family:'Cormorant Garamond',serif;color:var(--goldlt);background:var(--ink);outline:none;transition:border-color .2s}
+.psinp:focus{border-color:var(--gold)}
+.pslab{font-size:9px;color:var(--tdim);letter-spacing:.08em}
+
+/* BUTTONS */
+.btn{display:block;width:100%;padding:15px;border-radius:14px;border:none;font-size:15px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;transition:all .2s;text-align:center;letter-spacing:.04em}
+.btn-gld{background:linear-gradient(135deg,var(--gold),var(--goldlt));color:var(--ink)}
+.btn-gld:active{transform:scale(.97);filter:brightness(.9)}
+.btn-out{background:transparent;color:var(--tmist);border:1px solid rgba(255,255,255,.15)}
+.btn-out:active{opacity:.7}
+
+/* JORNADA CARD */
+.jcard{background:var(--ink2);border:1px solid rgba(255,255,255,.06);border-radius:16px;overflow:hidden;margin-bottom:10px}
+.jhead{padding:12px 16px;background:linear-gradient(135deg,rgba(201,168,76,.1),rgba(201,168,76,.04));border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between}
+.jnum{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;color:var(--ivory)}
+.jcampo{font-size:12px;color:var(--tmist);margin-top:1px}
+.jbody{padding:12px 16px}
+.jgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.jslbl{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--tdim);margin-bottom:3px}
+.jsval{font-size:14px;font-weight:600;color:var(--ivory)}
+.jsname{font-size:11px;color:var(--gold);font-style:italic}
+
+/* PROFILE */
+.pcard{background:var(--ink2);border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden;margin-bottom:10px}
+.phead{padding:14px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,.05)}
+.pavatar{width:46px;height:46px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:var(--ink)}
+.pname{font-size:16px;font-weight:600;color:var(--ivory)}
+.pnivel{font-size:11px;color:var(--tmist);margin-top:2px}
+.pstats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;padding:12px 0}
+.ps1{text-align:center}
+.ps1+.ps1{border-left:1px solid rgba(255,255,255,.06)}
+.ps1val{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--ivory)}
+.ps1lab{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--tdim)}
+.phist{padding:0 16px 14px}
+.mbars{display:flex;gap:5px;align-items:flex-end;height:48px}
+.mbarw{display:flex;flex-direction:column;align-items:center;gap:2px;flex:1}
+.mbar{width:100%;max-width:28px;border-radius:3px 3px 0 0;min-height:4px}
+.mbarl{font-size:8px;color:var(--tdim)}
+.mbarv{font-size:9px;color:var(--tmist);font-weight:600}
+
+/* CAMPO */
+.ccard{background:var(--ink2);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:14px;margin-bottom:8px}
+.cname{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--ivory)}
+.cmeta{font-size:11px;color:var(--tmist);margin-top:3px}
+.cpills{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.cpill{padding:3px 10px;border-radius:20px;font-size:10px;background:rgba(255,255,255,.06);color:var(--tmist);border:1px solid rgba(255,255,255,.08)}
+
+/* TOGGLE */
+.toggle{width:44px;height:26px;border-radius:13px;border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.toggle.on{background:var(--gold)}
+.toggle.off{background:rgba(255,255,255,.15)}
+.tknob{position:absolute;top:3px;width:20px;height:20px;border-radius:50%;background:white;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.toggle.on .tknob{left:21px}
+.toggle.off .tknob{left:3px}
+
+/* DISP ROW */
+.drow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.dinfo{flex:1}
+.dname{font-size:14px;font-weight:500;color:var(--ivory)}
+.davg{font-size:11px;color:var(--tdim);margin-top:1px}
+
+/* REC */
+.rcard{background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(201,168,76,.03));border:1px solid rgba(201,168,76,.2);border-radius:14px;padding:14px;margin-bottom:8px}
+.recrow{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.recrow:last-child{border-bottom:none}
+.recpos{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--gold);width:20px;flex-shrink:0}
+.recname{flex:1;font-size:13px;font-weight:500;color:var(--ivory)}
+.recval{font-size:13px;font-weight:600;color:var(--goldlt)}
+
+/* PRED */
+.predrow{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--ink3);border:1px solid rgba(255,255,255,.06);border-radius:12px;margin-bottom:6px}
+
+/* TOAST */
+.toast{position:fixed;top:calc(var(--st) + 80px);left:16px;right:16px;background:var(--ink3);color:var(--ivory);border:1px solid rgba(201,168,76,.3);padding:12px 18px;border-radius:12px;font-size:14px;font-weight:500;z-index:999;opacity:0;transform:translateY(-8px);transition:all .3s;pointer-events:none;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* HDIVIDER */
+.hdiv2{height:1px;background:rgba(255,255,255,.06);margin:10px 0}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-brand">
+    <div class="hdr-name">Alfa<span>master</span></div>
+    <div class="hdr-sub">Interclubs 2026 · Pitch &amp; Putt</div>
+  </div>
+  <div class="hdr-pill" id="hdr-pill">2 / 8 jornadas</div>
+</header>
+
+<!-- SCROLL AREA -->
+<div class="scroll-area" id="scrollArea">
+
+<!-- ═══ HOME ═══ -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-ey">⛳ Temporada activa — Club Alfamaster</div>
+    <div class="hero-t">Interclubs<br><strong>2026</strong></div>
+    <div class="hdiv"></div>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-val" id="hs-j">2</div><div class="hstat-lab">Jornadas</div></div>
+      <div class="hstat"><div class="hstat-val">13</div><div class="hstat-lab">Jugadores</div></div>
+      <div class="hstat"><div class="hstat-val gld" id="hs-b">57</div><div class="hstat-lab">Mejor ronda</div></div>
+      <div class="hstat"><div class="hstat-val">54</div><div class="hstat-lab">Par</div></div>
+    </div>
+    <div class="hero-bg">⛳</div>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="kpi-val" id="kpi-iv">57.0</div>
+      <div class="kpi-lbl">Líder individual</div>
+      <div class="kpi-sub" id="kpi-in">Andreu Alzina</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-val" id="kpi-fv">55.0</div>
+      <div class="kpi-lbl">Mejor fourball</div>
+      <div class="kpi-sub" id="kpi-fn">Pol · Santi · Adria</div>
+    </div>
+  </div>
+
+  <div class="slabel">Jornadas disputadas</div>
+  <div id="home-jornadas"></div>
+
+  <div class="slabel" style="margin-top:14px">Top 5 clasificación general</div>
+  <div id="home-top5"></div>
+
+  <div class="slabel" style="margin-top:14px">Próximos campos</div>
+  <div id="home-pending"></div>
+</div>
+
+<!-- ═══ RANKING ═══ -->
+<div class="page" id="page-ranking">
+  <div class="ptitle">Clasifi<em>cación</em></div>
+  <div class="psub">Menor promedio · mejor resultado</div>
+  <div class="itabs" id="rank-tabs">
+    <button class="itab active" onclick="switchRankTab('general',this)">General</button>
+    <button class="itab" onclick="switchRankTab('individual',this)">Individual</button>
+    <button class="itab" onclick="switchRankTab('fourball',this)">Fourball</button>
+  </div>
+  <div id="rank-list"></div>
+</div>
+
+<!-- ═══ INTRO ═══ -->
+<div class="page" id="page-intro">
+  <div class="ptitle">Nueva <em>jornada</em></div>
+  <div class="psub">Introduce resultados de la jornada</div>
+  <div class="card" style="margin-bottom:12px">
+    <div class="frow">
+      <div class="fg"><label class="fl">Jornada nº</label><select class="fsel" id="i-jornada"></select></div>
+      <div class="fg"><label class="fl">Fecha</label><input class="fi" type="date" id="i-fecha"></div>
+    </div>
+    <div class="fg">
+      <label class="fl">Campo</label>
+      <select class="fsel" id="i-campo">
+        <option value="GURUMBAU">GURUMBAU (J3)</option>
+        <option value="CAN RAFAEL">CAN RAFAEL (J4)</option>
+        <option value="BELLPUIG">BELLPUIG (J5)</option>
+        <option value="MONTSENY">MONTSENY (J6)</option>
+        <option value="BADALONA">BADALONA (J7)</option>
+        <option value="ST. CEBRIA">ST. CEBRIA (J8)</option>
+        <option value="OTRO">Otro campo...</option>
+      </select>
+    </div>
+    <div class="fg" id="otro-wrap" style="display:none">
+      <label class="fl">Nombre del campo</label>
+      <input class="fi" type="text" id="i-otro" placeholder="Nombre del campo">
+    </div>
+  </div>
+  <div class="slabel">Individual Medalplay</div>
+  <div id="form-ind"></div>
+  <div class="slabel" style="margin-top:14px">Fourball Medalplay</div>
+  <p style="font-size:11px;color:var(--tdim);margin-bottom:10px">Resultado de cada jugador en la modalidad pareja</p>
+  <div id="form-four"></div>
+  <div style="margin-top:18px;display:flex;gap:8px">
+    <button class="btn btn-gld" onclick="guardarJornada()" style="flex:2">Guardar jornada</button>
+    <button class="btn btn-out" onclick="limpiarForm()" style="flex:1">Limpiar</button>
+  </div>
+</div>
+
+<!-- ═══ JUGADORES ═══ -->
+<div class="page" id="page-jugadores">
+  <div class="ptitle"><em>Jugadores</em></div>
+  <div class="psub">Estadísticas · temporada 2026</div>
+  <div id="jugadores-list"></div>
+</div>
+
+<!-- ═══ ANÁLISIS ═══ -->
+<div class="page" id="page-campos">
+  <div class="ptitle">Análisis <em>&amp; campos</em></div>
+  <div class="psub">8 jornadas interclubs</div>
+  <div class="itabs" id="ctabs">
+    <button class="itab active" onclick="switchCTab('info',this)">Campos</button>
+    <button class="itab" onclick="switchCTab('compat',this)">Parejas</button>
+    <button class="itab" onclick="switchCTab('predictor',this)">Predictor</button>
+    <button class="itab" onclick="switchCTab('vspar',this)">vs Par</button>
+  </div>
+  <div id="campos-content"></div>
+</div>
+
+<!-- ═══ ALINEACIÓN ═══ -->
+<div class="page" id="page-alin">
+  <div class="ptitle">Alinea<em>ción</em></div>
+  <div class="psub">4 individuales · 2 parejas</div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="slabel">Disponibilidad próxima jornada</div>
+    <div id="disp-list"></div>
+  </div>
+  <button class="btn btn-gld" onclick="calcAlineacion()">Calcular alineación óptima</button>
+  <div id="alin-result" style="display:none;margin-top:16px">
+    <div class="slabel">Titulares individual</div>
+    <div class="rcard" id="rec-ind"></div>
+    <div class="slabel" style="margin-top:12px">Mejores parejas</div>
+    <div class="rcard" id="rec-four"></div>
+    <div class="slabel" style="margin-top:12px">Suplentes</div>
+    <div id="rec-sup"></div>
+  </div>
+</div>
+
+</div><!-- /scroll-area -->
+
+<!-- TAB BAR -->
+<nav class="tbar">
+  <button class="tb active" onclick="goPage('home',this)"><span class="ti">🏠</span><span class="tl">Inicio</span></button>
+  <button class="tb" onclick="goPage('ranking',this)"><span class="ti">🏆</span><span class="tl">Ranking</span></button>
+  <button class="tb" onclick="goPage('intro',this)"><span class="ti">✏️</span><span class="tl">Jornada</span></button>
+  <button class="tb" onclick="goPage('jugadores',this)"><span class="ti">👤</span><span class="tl">Jugadores</span></button>
+  <button class="tb" onclick="goPage('campos',this)"><span class="ti">📊</span><span class="tl">Análisis</span></button>
+  <button class="tb" onclick="goPage('alin',this)"><span class="ti">⚡</span><span class="tl">Alineación</span></button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════
+// DATOS REALES (ODS verificado)
+// J1 = HCP1 | J2 = VALLROMANES (únicas jugadas)
+// ═══════════════════════════════════════════
+
+const PAR = 54;
+
+const JUGADORES = [
+  'POL DANSA','SANTIAGO IZQUIERDO','ADRIA ROCA','JOSE ANDRES BERGES',
+  'OSCAR MAS','ADRIAN PEÑA','XAVIER MARI','DAVID ALFARAS','CARMEN ROS',
+  'JOAN BASSEDA','OSCAR PEREZ','ANDREU ALZINA','GABRIIEL GARCIA'
+];
+
+const CAMPOS_DATA = [
+  {name:'HCP1',        dist:'1.646m',rango:'60-118m',dif:'Alta',       tipo:'Técnico/Largo',       obs:'19 búnkeres, 3 lagos',          desc:'Técnico. Segundos 9 más difíciles. 5 hoyos con agua, hoyos 15–18 muy exigentes (>100m).'},
+  {name:'VALLROMANES', dist:'1.500m',rango:'45-120m',dif:'Alta',       tipo:'Técnico/Estratégico', obs:'Búnkeres, hazards, fuera límites',desc:'27 hoyos totales. Muy técnico, greens movidos. Requiere precisión y estrategia.'},
+  {name:'GURUMBAU',    dist:'1.777m',rango:'60-165m',dif:'Muy Alta',   tipo:'Largo/Natural',       obs:'Lagos, búnkeres, árboles',       desc:'El campo más largo. Hoyos muy variados, greens grandes, entorno natural.'},
+  {name:'CAN RAFAEL',  dist:'1.450m',rango:'50-120m',dif:'Media',      tipo:'Equilibrado',         obs:'Búnkeres estándar',              desc:'Campo equilibrado. Buena combinación de hoyos.'},
+  {name:'BELLPUIG',    dist:'1.400m',rango:'45-115m',dif:'Media',      tipo:'Amigable',            obs:'Obstáculos moderados',           desc:'Campo amigable. Buen mantenimiento.'},
+  {name:'MONTSENY',    dist:'1.500m',rango:'50-120m',dif:'Media-Alta', tipo:'Montaña',             obs:'Desniveles, búnkeres',           desc:'Entorno montañoso. Desniveles característicos.'},
+  {name:'BADALONA',    dist:'1.400m',rango:'40-110m',dif:'Media-Baja', tipo:'Llano/Fácil',         obs:'Búnkeres básicos',               desc:'Cerca del mar. Amigable para principiantes. Campo llano.'},
+  {name:'ST. CEBRIA',  dist:'1.413m',rango:'53-120m',dif:'Media-Alta', tipo:'Variado',             obs:'Búnkeres, árboles, 2 lagos',     desc:'Variedad de obstáculos. 2 lagos. Campo oficial ACPP.'},
+];
+
+// Matriz compatibilidad teórica (del ODS)
+const COMPAT = {
+  'POL DANSA|ADRIA ROCA':66.5,'POL DANSA|JOSE ANDRES BERGES':63.0,'POL DANSA|OSCAR MAS':60.8,
+  'POL DANSA|ADRIAN PEÑA':67.0,'POL DANSA|JOAN BASSEDA':63.0,'POL DANSA|ANDREU ALZINA':58.5,
+  'ADRIA ROCA|JOSE ANDRES BERGES':69.5,'ADRIA ROCA|OSCAR MAS':67.3,'ADRIA ROCA|ADRIAN PEÑA':73.5,
+  'ADRIA ROCA|JOAN BASSEDA':69.5,'ADRIA ROCA|ANDREU ALZINA':65.0,
+  'JOSE ANDRES BERGES|OSCAR MAS':63.8,'JOSE ANDRES BERGES|ADRIAN PEÑA':70.0,
+  'JOSE ANDRES BERGES|JOAN BASSEDA':66.0,'JOSE ANDRES BERGES|ANDREU ALZINA':61.5,
+  'OSCAR MAS|ADRIAN PEÑA':67.8,'OSCAR MAS|JOAN BASSEDA':63.8,'OSCAR MAS|ANDREU ALZINA':59.3,
+  'ADRIAN PEÑA|JOAN BASSEDA':70.0,'ADRIAN PEÑA|ANDREU ALZINA':65.5,'JOAN BASSEDA|ANDREU ALZINA':61.5,
+};
+function compat(a,b){return COMPAT[a+'|'+b]||COMPAT[b+'|'+a]||null}
+
+const COLORS=['#3d6b42','#c9a84c','#2e6b9a','#7a3d8a','#d47a20','#1a8a7a','#c03060','#c05020','#506070','#704a30','#1a7a6a','#505090','#c05820'];
+
+// ═══ STATE ═══
+const INIT = {
+  jornadas:[
+    {num:1,campo:'HCP1',fecha:'',
+     individual:{'POL DANSA':60,'JOSE ANDRES BERGES':66,'OSCAR MAS':65,'ADRIAN PEÑA':74},
+     fourball:{'SANTIAGO IZQUIERDO':55,'ADRIA ROCA':55,'XAVIER MARI':64,'DAVID ALFARAS':64}},
+    {num:2,campo:'VALLROMANES',fecha:'',
+     individual:{'ANDREU ALZINA':57,'OSCAR MAS':58,'JOAN BASSEDA':66,'ADRIA ROCA':73},
+     fourball:{'POL DANSA':55,'OSCAR PEREZ':55,'JOSE ANDRES BERGES':56,'CARMEN ROS':56}}
+  ],
+  disponibilidad:{}
+};
+
+function loadState(){
+  try{
+    const s=localStorage.getItem('alfa2026v2');
+    if(s){const p=JSON.parse(s);if(!p.jornadas||p.jornadas.length<2)p.jornadas=[...INIT.jornadas];return p;}
+  }catch(e){}
+  return JSON.parse(JSON.stringify(INIT));
+}
+function saveState(){try{localStorage.setItem('alfa2026v2',JSON.stringify(state));}catch(e){}}
+let state=loadState();
+
+// ═══ CALCS ═══
+function calcStats(){
+  return JUGADORES.map((name,idx)=>{
+    const ir=[],fr=[],ibyj=[],fbyj=[];
+    state.jornadas.forEach(j=>{
+      const iv=(j.individual||{})[name];const fv=(j.fourball||{})[name];
+      ibyj.push(iv&&iv>0&&iv<200?iv:null);fbyj.push(fv&&fv>0&&fv<200?fv:null);
+      if(iv&&iv>0&&iv<200)ir.push(iv);if(fv&&fv>0&&fv<200)fr.push(fv);
+    });
+    const iAvg=ir.length?ir.reduce((a,b)=>a+b,0)/ir.length:null;
+    const fAvg=fr.length?fr.reduce((a,b)=>a+b,0)/fr.length:null;
+    const genAvg=(iAvg!==null&&fAvg!==null)?(iAvg+fAvg)/2:(iAvg??fAvg);
+    const iBest=ir.length?Math.min(...ir):null;
+    const fBest=fr.length?Math.min(...fr):null;
+    const iTrend=ir.length>=2?ir[ir.length-1]-ir[ir.length-2]:null;
+    const stars=iAvg?(iAvg<=57?'★★★★★':iAvg<=60?'★★★★':iAvg<=65?'★★★':'★★'):'—';
+    const nivel=iAvg?(iAvg<=57?'Élite':iAvg<=60?'Muy bueno':iAvg<=65?'Regular':'Mejorar'):'Sin datos ind.';
+    return{name,idx,color:COLORS[idx%COLORS.length],initials:name.split(' ').map(w=>w[0]).join('').slice(0,2),
+           ir,fr,ibyj,fbyj,iAvg,fAvg,genAvg,iBest,fBest,iTrend,stars,nivel};
+  });
+}
+
+function ps(avg){if(avg===null)return'—';const d=avg-PAR;return(d>=0?'+':'')+d.toFixed(1);}
+function sn(name){const p=name.split(' ');return p[0]+(p[1]?' '+p[1][0]+'.':'');}
+function av(s,c){return`<div class="ravatar" style="background:${c};flex-shrink:0">${s}</div>`;}
+
+// ═══ NAVIGATION ═══
+function goPage(name,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  btn.classList.add('active');
+  document.getElementById('scrollArea').scrollTop=0;
+  const r={home:renderHome,ranking:()=>renderRanking('general'),intro:renderIntroForm,
+            jugadores:renderJugadores,campos:()=>renderCampos('info'),alin:renderAlineacion};
+  if(r[name])r[name]();
+}
+
+// ═══ HOME ═══
+function renderHome(){
+  const stats=calcStats();
+  const total=state.jornadas.length;
+  document.getElementById('hs-j').textContent=total;
+  document.getElementById('hdr-pill').textContent=total+' / 8 jornadas';
+
+  const iS=stats.filter(s=>s.iAvg!==null).sort((a,b)=>a.iAvg-b.iAvg);
+  const bestR=stats.reduce((b,s)=>s.iBest&&(b===null||s.iBest<b)?s.iBest:b,null);
+  document.getElementById('hs-b').textContent=bestR??'—';
+  if(iS.length){document.getElementById('kpi-iv').textContent=iS[0].iAvg.toFixed(1);document.getElementById('kpi-in').textContent=sn(iS[0].name);}
+  const fS=stats.filter(s=>s.fAvg!==null).sort((a,b)=>a.fAvg-b.fAvg);
+  if(fS.length){document.getElementById('kpi-fv').textContent=fS[0].fAvg.toFixed(1);document.getElementById('kpi-fn').textContent=fS.slice(0,3).map(s=>s.name.split(' ')[0]).join(' · ');}
+
+  // Jornadas
+  document.getElementById('home-jornadas').innerHTML=[...state.jornadas].reverse().slice(0,4).map(j=>{
+    const iE=Object.entries(j.individual||{});const fE=Object.entries(j.fourball||{});
+    const bI=iE.sort((a,b)=>a[1]-b[1])[0];const bF=fE.sort((a,b)=>a[1]-b[1])[0];
+    return`<div class="jcard"><div class="jhead">
+      <div><div class="jnum">Jornada ${j.num} — ${j.campo}</div>
+      <div class="jcampo">${j.fecha||'Fecha pendiente'} · ${iE.length} ind. · ${fE.length} fourball</div></div>
+      <span class="badge bg">✓ Jugada</span></div>
+      <div class="jbody"><div class="jgrid">
+        <div><div class="jslbl">🥇 Mejor individual</div><div class="jsval">${bI?bI[1]+' g':'—'}</div><div class="jsname">${bI?sn(bI[0]):''}</div></div>
+        <div><div class="jslbl">👥 Mejor pareja</div><div class="jsval">${bF?bF[1]+' g':'—'}</div><div class="jsname">${bF?sn(bF[0]):''}</div></div>
+      </div></div></div>`;
+  }).join('');
+
+  // Top 5
+  const gS=stats.filter(s=>s.genAvg!==null).sort((a,b)=>a.genAvg-b.genAvg).slice(0,5);
+  document.getElementById('home-top5').innerHTML=gS.map((s,i)=>rankRowHTML(s,i,'general')).join('');
+
+  // Pending
+  const done=new Set(state.jornadas.map(j=>j.campo));
+  const pend=CAMPOS_DATA.filter(c=>!done.has(c.name)).slice(0,4);
+  document.getElementById('home-pending').innerHTML=pend.map(c=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 14px;background:var(--ink2);border:1px solid rgba(255,255,255,.05);border-radius:12px;margin-bottom:6px">
+      <div><div style="font-size:13px;font-weight:600;color:var(--ivory)">${c.name}</div>
+      <div style="font-size:10px;color:var(--tdim);margin-top:1px">${c.dist} · ${c.dif}</div></div>
+      <span class="badge bgr">Pendiente</span></div>`).join('');
+}
+
+// ═══ RANKING ═══
+function rankRowHTML(s,i,mode){
+  const avg=mode==='individual'?s.iAvg:mode==='fourball'?s.fAvg:s.genAvg;
+  const rounds=mode==='individual'?s.ir.length:mode==='fourball'?s.fr.length:Math.max(s.ir.length,s.fr.length);
+  const pc=i===0?'g':i===1?'s':i===2?'b':'';
+  const rc=i===0?'r1':i===1?'r2':i===2?'r3':'';
+  const tb=s.iTrend!==null?s.iTrend<0?`<span class="badge bg" style="margin-left:5px">↓ mejora</span>`:s.iTrend>0?`<span class="badge br" style="margin-left:5px">↑ baja</span>`:'':'';
+  return`<div class="rrow ${rc}">
+    <div class="rpos ${pc}">${i+1}</div>
+    <div class="ravatar" style="background:${s.color}">${s.initials}</div>
+    <div class="rinfo"><div class="rname">${s.name}</div>
+    <div class="rdetail">${rounds} jornada${rounds!==1?'s':''}${tb}</div></div>
+    <div class="rscore"><div class="ravg">${avg!==null?avg.toFixed(1):'—'}</div>
+    <div class="rpar">${avg!==null?ps(avg)+' par':'sin datos'}</div></div></div>`;
+}
+
+function switchRankTab(mode,btn){
+  document.querySelectorAll('#rank-tabs .itab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderRanking(mode);
+}
+function renderRanking(mode){
+  const stats=calcStats();
+  let sorted;
+  if(mode==='individual')sorted=stats.filter(s=>s.iAvg!==null).sort((a,b)=>a.iAvg-b.iAvg);
+  else if(mode==='fourball')sorted=stats.filter(s=>s.fAvg!==null).sort((a,b)=>a.fAvg-b.fAvg);
+  else sorted=stats.filter(s=>s.genAvg!==null).sort((a,b)=>a.genAvg-b.genAvg);
+  const noD=stats.filter(s=>(mode==='individual'?s.iAvg:mode==='fourball'?s.fAvg:s.genAvg)===null);
+  document.getElementById('rank-list').innerHTML=sorted.map((s,i)=>rankRowHTML(s,i,mode)).join('')+
+    (noD.length?`<div style="margin-top:14px;font-size:10px;color:var(--tdim);text-align:center;letter-spacing:.08em">SIN DATOS: ${noD.map(s=>s.name.split(' ')[0]).join(' · ')}</div>`:'');
+}
+
+// ═══ FORM ═══
+function renderIntroForm(){
+  const sel=document.getElementById('i-jornada');sel.innerHTML='';
+  const max=Math.max(...state.jornadas.map(j=>j.num),2);
+  for(let i=max+1;i<=20;i++)sel.innerHTML+=`<option value="${i}">Jornada ${i}</option>`;
+  document.getElementById('i-fecha').value=new Date().toISOString().split('T')[0];
+  document.getElementById('i-campo').onchange=function(){document.getElementById('otro-wrap').style.display=this.value==='OTRO'?'block':'none';};
+  ['form-ind','form-four'].forEach((id,fi)=>{
+    document.getElementById(id).innerHTML=JUGADORES.map((j,idx)=>{
+      const k=`${fi===0?'i':'f'}_${j.replace(/ /g,'_')}`;
+      return`<div class="psrow" id="row_${k}">
+        <div class="ravatar" style="background:${COLORS[idx%COLORS.length]};width:32px;height:32px;font-size:11px;font-weight:700;color:var(--ink);flex-shrink:0">${j.split(' ').map(w=>w[0]).join('').slice(0,2)}</div>
+        <div class="psname">${j}</div>
+        <div class="pswrap"><input class="psinp" type="number" inputmode="numeric" min="40" max="120" placeholder="—" id="${k}" oninput="onSI('${k}')"><div class="pslab">golpes</div></div>
+      </div>`;
+    }).join('');
+  });
+}
+function onSI(k){const v=document.getElementById(k)?.value;const r=document.getElementById('row_'+k);if(r)r.classList.toggle('hv',!!v);}
+function guardarJornada(){
+  const num=parseInt(document.getElementById('i-jornada').value);
+  let campo=document.getElementById('i-campo').value;
+  if(campo==='OTRO')campo=document.getElementById('i-otro').value||'Otro';
+  const fecha=document.getElementById('i-fecha').value;
+  const ind={},four={};let has=false;
+  JUGADORES.forEach(j=>{
+    const k=j.replace(/ /g,'_');
+    const iv=parseInt(document.getElementById('i_'+k)?.value);
+    const fv=parseInt(document.getElementById('f_'+k)?.value);
+    if(iv>0&&iv<200){ind[j]=iv;has=true;}if(fv>0&&fv<200){four[j]=fv;has=true;}
+  });
+  if(!has){showToast('⚠️ Introduce al menos un resultado');return;}
+  const jornada={num,campo,fecha,individual:ind,fourball:four};
+  const idx=state.jornadas.findIndex(j=>j.num===num);
+  if(idx>=0)state.jornadas[idx]=jornada;else{state.jornadas.push(jornada);state.jornadas.sort((a,b)=>a.num-b.num);}
+  saveState();showToast(`✓ Jornada ${num} · ${campo} guardada`);limpiarForm();
+}
+function limpiarForm(){
+  JUGADORES.forEach(j=>{const k=j.replace(/ /g,'_');['i_','f_'].forEach(p=>{const el=document.getElementById(p+k);if(el)el.value='';const r=document.getElementById('row_'+p+k);if(r)r.classList.remove('hv');});});
+}
+
+// ═══ JUGADORES ═══
+function renderJugadores(){
+  const stats=calcStats().sort((a,b)=>{
+    if(a.genAvg!==null&&b.genAvg!==null)return a.genAvg-b.genAvg;
+    return a.genAvg!==null?-1:b.genAvg!==null?1:0;
+  });
+  document.getElementById('jugadores-list').innerHTML=stats.map(s=>{
+    const bars=state.jornadas.map((j,ji)=>({v:s.ibyj[ji],c:j.campo.slice(0,4)}));
+    const valid=bars.filter(b=>b.v!==null);
+    const maxV=valid.length?Math.max(...valid.map(b=>b.v)):PAR+20;
+    const minV=valid.length?Math.min(...valid.map(b=>b.v)):PAR;
+    const range=maxV-minV||1;
+    const bH=bars.map(b=>{
+      const h=b.v?Math.max(6,Math.round((1-(b.v-minV)/range)*36)+6):4;
+      const col=!b.v?'rgba(255,255,255,.06)':b.v<=PAR+3?'#3d6b42':b.v<=PAR+10?'#9a7a2a':'#7a2a2a';
+      return`<div class="mbarw"><div class="mbarv">${b.v||''}</div><div class="mbar" style="height:${h}px;background:${col}"></div><div class="mbarl">${b.c}</div></div>`;
+    }).join('');
+    return`<div class="pcard">
+      <div class="phead">
+        <div class="pavatar" style="background:${s.color}">${s.initials}</div>
+        <div style="flex:1"><div class="pname">${s.name}</div><div class="pnivel">${s.stars} · ${s.nivel}</div></div>
+        <span class="badge ${s.iAvg&&s.iAvg<=60?'bg':s.iAvg?'bgo':'bgr'}">${s.iAvg?s.iAvg.toFixed(1):'—'}</span>
+      </div>
+      <div class="pstats">
+        <div class="ps1"><div class="ps1val">${s.iAvg?s.iAvg.toFixed(1):'—'}</div><div class="ps1lab">Prom ind.</div></div>
+        <div class="ps1"><div class="ps1val">${s.fAvg?s.fAvg.toFixed(1):'—'}</div><div class="ps1lab">Prom four.</div></div>
+        <div class="ps1"><div class="ps1val">${s.iBest??'—'}</div><div class="ps1lab">Mejor ronda</div></div>
+        <div class="ps1"><div class="ps1val">${s.ir.length+s.fr.length}</div><div class="ps1lab">Partidos</div></div>
+      </div>
+      ${valid.length?`<div class="phist"><div style="font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--tdim);margin-bottom:6px">Evolución individual</div><div class="mbars">${bH}</div></div>`:''}
+    </div>`;
+  }).join('');
+}
+
+// ═══ CAMPOS / ANÁLISIS ═══
+function switchCTab(tab,btn){document.querySelectorAll('#ctabs .itab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderCampos(tab);}
+
+function renderCampos(tab){
+  const el=document.getElementById('campos-content');
+  const done=new Set(state.jornadas.map(j=>j.campo));
+
+  if(tab==='info'){
+    el.innerHTML=CAMPOS_DATA.map((c,ci)=>{
+      const j=state.jornadas.find(jj=>jj.campo===c.name);
+      const iE=j?Object.entries(j.individual||[]):[];
+      const bI=iE.length?[...iE].sort((a,b)=>a[1]-b[1])[0]:null;
+      const played=done.has(c.name);
+      return`<div class="ccard">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between">
+          <div><div class="cname">J${ci+1} · ${c.name}</div><div class="cmeta">${c.tipo} · ${c.dist} · ${c.rango}</div></div>
+          <span class="badge ${played?'bg':'bgr'}">${played?'✓ Jugado':'Pendiente'}</span>
+        </div>
+        <div class="cpills"><span class="cpill">📏 ${c.dist}</span><span class="cpill">⚡ ${c.dif}</span><span class="cpill">🏌️ ${c.tipo}</span><span class="cpill">⛳ ${c.obs}</span></div>
+        <div style="margin-top:8px;font-size:11px;color:var(--tmist);font-style:italic">${c.desc}</div>
+        ${bI?`<div class="hdiv2"></div><div style="font-size:11px;color:var(--tdim)">🥇 <span style="color:var(--gold)">${sn(bI[0])}</span> — <strong style="color:var(--ivory)">${bI[1]} golpes</strong> (${ps(bI[1])} par)</div>`:''}
+      </div>`;
+    }).join('');
+  }
+
+  else if(tab==='compat'){
+    const stats=calcStats();
+    const pairs=[];
+    for(let i=0;i<stats.length;i++)for(let j=i+1;j<stats.length;j++){
+      const c=compat(stats[i].name,stats[j].name);
+      const est=(stats[i].iAvg&&stats[j].iAvg)?(stats[i].iAvg+stats[j].iAvg)/2:null;
+      const val=c??est;if(val)pairs.push({j1:stats[i],j2:stats[j],val,real:c!==null});
+    }
+    pairs.sort((a,b)=>a.val-b.val);
+    el.innerHTML=`<div class="slabel">Ranking mejores parejas teóricas</div>`+
+      pairs.slice(0,15).map((p,i)=>`<div class="rrow ${i<3?'r'+(i+1):''}">
+        <div class="rpos ${i<3?'gsr'[i]:''}">${i+1}</div>
+        <div style="display:flex;gap:4px;flex-shrink:0">
+          <div class="ravatar" style="background:${p.j1.color};width:28px;height:28px;font-size:9px;font-weight:700;color:var(--ink)">${p.j1.initials}</div>
+          <div class="ravatar" style="background:${p.j2.color};width:28px;height:28px;font-size:9px;font-weight:700;color:var(--ink)">${p.j2.initials}</div>
+        </div>
+        <div class="rinfo"><div class="rname" style="font-size:13px">${p.j1.name.split(' ')[0]} + ${p.j2.name.split(' ')[0]}</div>
+        <div class="rdetail">${p.real?'✓ Datos reales':'Estimado por prom. ind.'}</div></div>
+        <div class="rscore"><div class="ravg">${p.val.toFixed(1)}</div><div class="rpar">${ps(p.val)} par</div></div>
+      </div>`).join('')+
+      `<div style="margin-top:10px;padding:12px;background:var(--ink3);border-radius:12px;font-size:10px;color:var(--tdim);line-height:1.6">Promedio teórico = media de los promedios individuales de ambos jugadores. Sirve como estimación para elegir la mejor pareja.</div>`;
+  }
+
+  else if(tab==='predictor'){
+    const stats=calcStats();
+    el.innerHTML=`<div class="slabel">Predicción próxima jornada J${state.jornadas.length+1}</div>`+
+      stats.filter(s=>s.iAvg!==null).sort((a,b)=>a.iAvg-b.iAvg).map(s=>{
+        const tAdj=s.iTrend!==null?s.iTrend*0.3:0;
+        const pred=(s.iAvg+tAdj).toFixed(1);
+        const conf=s.ir.length>=4?'★★★★ Alta':s.ir.length>=3?'★★★ Media':s.ir.length===2?'★★ Baja':'★ Muy baja';
+        const estado=s.iTrend!==null&&s.iTrend<0?'🔥 En forma':s.iTrend!==null&&s.iTrend>0?'⚠️ Baja forma':'➡️ Estable';
+        return`<div class="predrow">
+          <div class="ravatar" style="background:${s.color};width:32px;height:32px;font-size:11px;font-weight:700;color:var(--ink);flex-shrink:0">${s.initials}</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--ivory)">${s.name}</div>
+          <div style="font-size:10px;color:var(--tdim)">${conf} · ${estado}</div></div>
+          <div style="text-align:right">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--goldlt)">${pred}</div>
+            <div style="font-size:9px;color:var(--tdim)">${ps(parseFloat(pred))} par</div>
+          </div>
+        </div>`;
+      }).join('')+
+      `<div style="margin-top:12px;padding:12px;background:var(--ink3);border-radius:12px;font-size:10px;color:var(--tdim);line-height:1.6">Con solo 2 jornadas la confianza es baja. El predictor mejora exponencialmente con más datos.</div>`;
+  }
+
+  else if(tab==='vspar'){
+    const stats=calcStats();
+    el.innerHTML=`<div class="slabel">Rendimiento vs par (54 golpes)</div>`+
+      stats.filter(s=>s.iAvg!==null||s.fAvg!==null).sort((a,b)=>{
+        const ag=(a.iAvg??a.fAvg)??999,bg=(b.iAvg??b.fAvg)??999;return ag-bg;
+      }).map(s=>{
+        const iD=s.iAvg!==null?s.iAvg-PAR:null;const fD=s.fAvg!==null?s.fAvg-PAR:null;
+        const barW=80;
+        const iBarPct=iD!==null?Math.min(100,Math.max(0,(iD/30)*100)):0;
+        const fBarPct=fD!==null?Math.min(100,Math.max(0,(fD/30)*100)):0;
+        return`<div class="ccard" style="padding:12px 14px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <div class="ravatar" style="background:${s.color};width:32px;height:32px;font-size:11px;font-weight:700;color:var(--ink)">${s.initials}</div>
+            <div style="flex:1;font-size:13px;font-weight:600;color:var(--ivory)">${s.name}</div>
+          </div>
+          ${s.iAvg!==null?`<div style="margin-bottom:6px">
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--tdim);margin-bottom:3px"><span>Individual</span><span style="color:${iD<=6?'var(--mist)':iD<=12?'var(--goldlt)':'#e07060'};font-weight:600">${ps(s.iAvg)}</span></div>
+            <div style="height:6px;background:rgba(255,255,255,.08);border-radius:3px"><div style="height:100%;width:${iBarPct}%;background:${iD<=6?'var(--fern)':iD<=12?'var(--gold)':'var(--reds)'};border-radius:3px;transition:width .6s"></div></div>
+          </div>`:''}
+          ${s.fAvg!==null?`<div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--tdim);margin-bottom:3px"><span>Fourball</span><span style="color:${fD<=3?'var(--mist)':fD<=8?'var(--goldlt)':'#e07060'};font-weight:600">${ps(s.fAvg)}</span></div>
+            <div style="height:6px;background:rgba(255,255,255,.08);border-radius:3px"><div style="height:100%;width:${fBarPct}%;background:${fD<=3?'var(--fern)':fD<=8?'var(--gold)':'var(--reds)'};border-radius:3px;transition:width .6s"></div></div>
+          </div>`:''}
+        </div>`;
+      }).join('');
+  }
+}
+
+// ═══ ALINEACIÓN ═══
+function renderAlineacion(){
+  const stats=calcStats();
+  document.getElementById('disp-list').innerHTML=JUGADORES.map((j,idx)=>{
+    const s=stats.find(st=>st.name===j);
+    const disp=state.disponibilidad[j]!==false;
+    return`<div class="drow">
+      <div class="ravatar" style="background:${COLORS[idx%COLORS.length]};width:34px;height:34px;font-size:11px;font-weight:700;color:var(--ink);flex-shrink:0">${j.split(' ').map(w=>w[0]).join('').slice(0,2)}</div>
+      <div class="dinfo"><div class="dname">${j}</div>
+      <div class="davg">Ind: ${s?.iAvg?.toFixed(1)??'—'} · Four: ${s?.fAvg?.toFixed(1)??'—'}</div></div>
+      <button class="toggle ${disp?'on':'off'}" id="tog_${j.replace(/ /g,'_')}" onclick="toggleD('${j}')">
+        <div class="tknob"></div>
+      </button>
+    </div>`;
+  }).join('');
+  document.getElementById('alin-result').style.display='none';
+}
+
+function toggleD(j){
+  state.disponibilidad[j]=state.disponibilidad[j]===false?true:false;
+  saveState();
+  const t=document.getElementById('tog_'+j.replace(/ /g,'_'));
+  if(t){t.classList.toggle('on',state.disponibilidad[j]!==false);t.classList.toggle('off',state.disponibilidad[j]===false);}
+}
+
+function calcAlineacion(){
+  const stats=calcStats();
+  const disp=JUGADORES.filter(j=>state.disponibilidad[j]!==false);
+  if(disp.length<4){showToast('⚠️ Mínimo 4 jugadores disponibles');return;}
+  const dS=stats.filter(s=>disp.includes(s.name));
+  const iS=dS.filter(s=>s.iAvg!==null).sort((a,b)=>a.iAvg-b.iAvg);
+  const top4=iS.slice(0,4);const sup=iS.slice(4);
+  // Pairs
+  const pairs=[];
+  for(let i=0;i<dS.length;i++)for(let j=i+1;j<dS.length;j++){
+    const c=compat(dS[i].name,dS[j].name);
+    const est=(dS[i].iAvg&&dS[j].iAvg)?(dS[i].iAvg+dS[j].iAvg)/2:null;
+    const v=c??est;if(v)pairs.push({j1:dS[i],j2:dS[j],v});
+  }
+  pairs.sort((a,b)=>a.v-b.v);
+  const tp=pairs.slice(0,2);
+
+  const res=document.getElementById('alin-result');res.style.display='block';
+  document.getElementById('rec-ind').innerHTML=`<div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--tdim);margin-bottom:10px">4 Titulares · mejores 3/4 cuentan</div>`+
+    (top4.length?top4.map((s,i)=>`<div class="recrow">
+      <div class="recpos">${i+1}</div>
+      <div class="ravatar" style="background:${s.color};width:28px;height:28px;font-size:9px;font-weight:700;color:var(--ink);flex-shrink:0">${s.initials}</div>
+      <div class="recname">${s.name}</div>
+      <div style="text-align:right"><div class="recval">${s.iAvg.toFixed(1)}</div><div style="font-size:9px;color:var(--tdim)">${ps(s.iAvg)}</div></div>
+    </div>`).join(''):'<div style="color:var(--tdim);font-size:12px">Sin datos suficientes</div>');
+
+  document.getElementById('rec-four').innerHTML=`<div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--tdim);margin-bottom:10px">2 Parejas · la mejor cuenta</div>`+
+    (tp.length?tp.map((p,i)=>`<div class="recrow">
+      <div class="recpos">${i+1}</div>
+      <div style="display:flex;gap:4px;flex-shrink:0">
+        <div class="ravatar" style="background:${p.j1.color};width:24px;height:24px;font-size:8px;font-weight:700;color:var(--ink)">${p.j1.initials}</div>
+        <div class="ravatar" style="background:${p.j2.color};width:24px;height:24px;font-size:8px;font-weight:700;color:var(--ink)">${p.j2.initials}</div>
+      </div>
+      <div class="recname" style="font-size:12px">${p.j1.name.split(' ')[0]} + ${p.j2.name.split(' ')[0]}</div>
+      <div style="text-align:right"><div class="recval">${p.v.toFixed(1)}</div><div style="font-size:9px;color:var(--tdim)">teórico</div></div>
+    </div>`).join(''):'<div style="color:var(--tdim);font-size:12px">Sin datos suficientes</div>');
+
+  document.getElementById('rec-sup').innerHTML=sup.length?sup.map(s=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--ink2);border:1px solid rgba(255,255,255,.05);border-radius:12px;margin-bottom:6px">
+      <div class="ravatar" style="background:${s.color};width:28px;height:28px;font-size:9px;font-weight:700;color:var(--ink)">${s.initials}</div>
+      <div style="flex:1;font-size:13px;color:var(--tmist)">${s.name}</div>
+      <span class="badge bgr">Suplente</span>
+    </div>`).join(''):'<div style="font-size:11px;color:var(--tdim);text-align:center;padding:8px">Sin suplentes</div>';
+
+  res.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ═══ UTILS ═══
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// ═══ INIT ═══
+document.addEventListener('DOMContentLoaded',()=>{renderHome();});
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js').catch(()=>{});});}
+</script>
+</body>
+</html>

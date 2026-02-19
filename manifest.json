@@ -1,0 +1,16 @@
+{
+  "name": "Alfamaster 2026 Interclubs",
+  "short_name": "Alfamaster",
+  "description": "Gestión de torneo interclubs Pitch & Putt temporada 2026",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0c1a0e",
+  "theme_color": "#0c1a0e",
+  "icons": [
+    {"src":"icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ],
+  "categories": ["sports","utilities"],
+  "lang": "es"
+}
